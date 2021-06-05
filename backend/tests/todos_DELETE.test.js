@@ -1,7 +1,7 @@
-import server from "../src/index";
 import request from "supertest";
 import { expect } from "chai";
-import { dropDatabase } from "../src/databaseUtils";
+import { DBForTests as DB } from "./server.test.js";
+import { serverForTests as server } from "./server.test.js";
 
 describe("DELETE /api/v1/todos/:id given wrong id", async () => {
   let response, firstTodoItem;
@@ -13,7 +13,7 @@ describe("DELETE /api/v1/todos/:id given wrong id", async () => {
     response = await request(server).delete(`/api/v1/todos/not_a_real_id`);
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
   it("status should be 404", () => {
     expect(response.status).to.equal(404);
@@ -41,7 +41,7 @@ describe('DELETE /api/v1/todos/:id given correct id"', () => {
     );
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
   it("status should be 200", () => {
     expect(response.status).to.equal(200);

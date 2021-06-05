@@ -1,7 +1,7 @@
-import server from "../src/index";
 import request from "supertest";
 import { expect } from "chai";
-import { dropDatabase } from "../src/databaseUtils";
+import { DBForTests as DB } from "./server.test.js";
+import { serverForTests as server } from "./server.test.js";
 
 describe("GET /api/v1/todos", async () => {
   let response, firstTodoItem;
@@ -13,7 +13,7 @@ describe("GET /api/v1/todos", async () => {
     response = await request(server).get("/api/v1/todos");
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
 
   it("status should be 200", () => {
@@ -82,7 +82,7 @@ describe("GET /api/v1/todos/:id given correct id", async () => {
       `/api/v1/todos/${secondTodoItem.body.payload.id}`
     );
   });
-  after(async () => await dropDatabase());
+  after(async () => await DB.dropDatabase());
   it("status should be 200", () => {
     expect(firstResponse.status).to.equal(200);
     expect(secondResponse.status).to.equal(200);

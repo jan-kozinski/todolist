@@ -1,8 +1,7 @@
-import server from "../src/index";
 import request from "supertest";
 import { expect } from "chai";
-import { dropDatabase } from "../src/databaseUtils";
-
+import { DBForTests as DB } from "./server.test.js";
+import { serverForTests as server } from "./server.test.js";
 describe("POST /api/v1/todos given proper input", () => {
   let response;
   before(async () => {
@@ -11,7 +10,7 @@ describe("POST /api/v1/todos given proper input", () => {
       .set("Content-Type", "application/json")
       .send({ description: "pet the cat" });
   });
-  after(async () => await dropDatabase());
+  after(async () => await DB.dropDatabase());
   it("status should be 200", () => {
     expect(response.status).to.equal(200);
   });
@@ -38,7 +37,7 @@ describe("POST /api/v1/todos given proper input", () => {
 });
 
 describe("POST /api/v1/todos given invalid input", () => {
-  after(async () => dropDatabase());
+  after(async () => DB.dropDatabase());
   it("given number value should stringify the input and treat is as a valid one", async () => {
     const response = await request(server)
       .post("/api/v1/todos")

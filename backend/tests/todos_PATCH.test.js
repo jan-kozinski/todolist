@@ -1,7 +1,7 @@
-import server from "../src/index";
 import request from "supertest";
 import { expect } from "chai";
-import { dropDatabase } from "../src/databaseUtils";
+import { DBForTests as DB } from "./server.test.js";
+import { serverForTests as server } from "./server.test.js";
 
 describe("PATCH /api/v1/todos/check/:id", () => {
   let response, firstTodoItem, payload;
@@ -16,7 +16,7 @@ describe("PATCH /api/v1/todos/check/:id", () => {
     payload = response.body.payload;
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
   it("status should be 200", () => {
     expect(response.status).to.equal(200);
@@ -63,7 +63,7 @@ describe("PATCH /api/v1/todos/uncheck/:id", () => {
     payload = response.body.payload;
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
   it("status should be 200", () => {
     expect(response.status).to.equal(200);
@@ -110,7 +110,7 @@ describe("PATCH /api/v1/todos/check/:id and /api/v1/todos/uncheck/:id given wron
     );
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
 
   it("both requests status should be 404", () => {
@@ -146,7 +146,7 @@ describe("PATCH /api/v1/todos/update/:id", () => {
     payload = response.body.payload;
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
   it("status should be 200", () => {
     expect(response.status).to.equal(200);
@@ -188,7 +188,7 @@ describe("", () => {
       .then((res) => res.body.payload);
   });
   after(async () => {
-    await dropDatabase();
+    await DB.dropDatabase();
   });
 
   it("given number value should stringify the input and treat is as a valid one", async () => {
