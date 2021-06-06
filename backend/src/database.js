@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import config from "config";
 
 class Database {
   constructor(dbURI) {
