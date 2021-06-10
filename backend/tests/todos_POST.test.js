@@ -38,7 +38,7 @@ describe("POST /api/v1/todos given proper input", () => {
 
 describe("POST /api/v1/todos given invalid input", () => {
   after(async () => DB.dropDatabase());
-  it("given number value should stringify the input and treat is as a valid one", async () => {
+  it("given number value should stringify the input and treat it as a valid one", async () => {
     const response = await request(server)
       .post("/api/v1/todos")
       .set("Content-Type", "application/json")

@@ -191,7 +191,7 @@ describe("", () => {
     await DB.dropDatabase();
   });
 
-  it("given number value should stringify the input and treat is as a valid one", async () => {
+  it("given number value should stringify the input and treat it as a valid one", async () => {
     const response = await request(server)
       .patch(`/api/v1/todos/update/${firstTodoItem.id}`)
       .set("Content-Type", "application/json")

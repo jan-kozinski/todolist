@@ -5,10 +5,23 @@ class Database {
     this.dbURI = dbURI;
   }
   connectDB() {
-    mongoose.connect(this.dbURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    if (process.env.NODE_ENV === "test") {
+      const { MockMongoose } = require("mock-mongoose");
+      let mockMongoose = new MockMongoose(mongoose);
+      mockMongoose.prepareStorage().then(() => {
+        mongoose.connect(this.dbURI, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        });
+        mongoose.connection.on("connected", () => {
+          console.log("mock db connection is now open");
+        });
+      });
+    } else
+      mongoose.connect(this.dbURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
 
     // callback when connection to mongodb is open
     mongoose.connection.once("open", function () {

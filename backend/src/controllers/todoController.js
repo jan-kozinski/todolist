@@ -6,7 +6,7 @@ const getTodos = async () => {
 
     let todosToSend = [];
     for (var todoItem of todos) {
-      todosToSend.push({
+      todosToSend.unshift({
         id: todoItem._id,
         description: todoItem.description,
         completed: todoItem.completed,
@@ -101,7 +101,6 @@ const toggleTodoCompleted = async (shouldBeChecked, id) => {
 
 const updateTodoDescriptionByID = async (id, description) => {
   try {
-    console.log("description", description, "type: ", typeof description);
     if (typeof description === "number") description = description.toString();
 
     if (typeof description !== "string" || description.length === 0)
