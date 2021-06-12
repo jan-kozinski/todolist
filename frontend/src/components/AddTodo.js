@@ -8,7 +8,6 @@ function AddTodo({ displayTodo }) {
   const [offsetHeight, setOffsetHeight] = useState("auto");
 
   useEffect(() => {
-    //offsetHeight doesn't count the box-shadow, hence the +5
     setOffsetHeight(document.querySelector("#addTodoContainer").offsetHeight);
   }, [setOffsetHeight, error]);
 
@@ -19,9 +18,7 @@ function AddTodo({ displayTodo }) {
       if (!description) return setError("Description can't be empty!");
       const result = await axios.post("/api/v1/todos", { description });
       setDescription("");
-      console.log("before");
       if (!result.data.success) {
-        console.log("after");
         return setError(result.data.message);
       }
       displayTodo(result.data.payload);
@@ -32,11 +29,19 @@ function AddTodo({ displayTodo }) {
 
   return (
     <AnimateHeight duration={500} height={offsetHeight}>
-      <div id="addTodoContainer" className="pb-4">
+      <section id="addTodoContainer" className="pb-2">
         <div id="addTodoHeader">
           <h2 className="m-auto w-max text-2xl">Add Todo</h2>
         </div>
-        <form role="form" className="item flex flex-col" onSubmit={onSubmit}>
+        <form
+          role="form"
+          className="item flex flex-col"
+          style={{
+            borderTopLeftRadius: "0px",
+            borderTopRightRadius: "0px",
+          }}
+          onSubmit={onSubmit}
+        >
           <label htmlFor="description">Description:</label>
           <textarea
             id="description"
@@ -58,7 +63,7 @@ function AddTodo({ displayTodo }) {
             </span>
           )}
         </form>
-      </div>
+      </section>
     </AnimateHeight>
   );
 }

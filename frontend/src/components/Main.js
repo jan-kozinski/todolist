@@ -12,8 +12,10 @@ function Main() {
     setTodos([todo, ...todos]);
   };
   const removeTodoFromState = (id) => {
+    // Start the fading out animation for the item that is to be removed
     document.querySelector(`#item-${id}`).classList.add("fadeout", "opacity-0");
     const updatedTodosArray = todos.filter((todo) => todo.id !== id);
+    // Wait for removed item to fade out
     setTimeout(() => {
       setTodos(updatedTodosArray);
     }, 600);
@@ -22,6 +24,7 @@ function Main() {
     let isStopped = false;
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
+
     if (!isStopped) {
       const getTodos = async () => {
         try {
@@ -38,6 +41,7 @@ function Main() {
       };
       getTodos();
     }
+
     return () => {
       isStopped = true;
       if (source) source.cancel("operation canceled");

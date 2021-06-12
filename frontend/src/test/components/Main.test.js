@@ -107,13 +107,17 @@ describe("Main rendering Todos", () => {
     expect(screen.queryByRole("listitem")).not.toBeInTheDocument();
     expect(axios.get).toBeCalledTimes(1);
     await waitForElementToBeRemoved(() => screen.getByText("Loading todos..."));
-    expect(await screen.findAllByRole("listitem")).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", { hidden: true })
+    ).toHaveLength(2);
   });
   it("When new todo was created by the user it should push it to its state", async () => {
     act(() => {
       render(<Main />);
     });
-    expect(await screen.findAllByRole("listitem")).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", { hidden: true })
+    ).toHaveLength(2);
 
     let textArea = screen.getByLabelText("Description:");
     expect(textArea).toHaveValue("");
@@ -128,8 +132,12 @@ describe("Main rendering Todos", () => {
       description: "Mock the database",
     });
     expect(textArea).toHaveValue("");
-    expect(await screen.findAllByRole("listitem")).toHaveLength(3);
-    let firstItemInList = (await screen.findAllByRole("listitem"))[0];
+    expect(
+      await screen.findAllByRole("listitem", { hidden: true })
+    ).toHaveLength(3);
+    let firstItemInList = (
+      await screen.findAllByRole("listitem", { hidden: true })
+    )[0];
     expect(firstItemInList.innerHTML).toMatch("Mock the database");
   });
 
@@ -137,7 +145,9 @@ describe("Main rendering Todos", () => {
     act(() => {
       render(<Main />);
     });
-    expect(await screen.findAllByRole("listitem")).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", { hidden: true })
+    ).toHaveLength(2);
 
     await act(async () => {
       jest.useFakeTimers();
@@ -148,6 +158,8 @@ describe("Main rendering Todos", () => {
 
     expect(axios.delete).toBeCalledTimes(1);
     expect(axios.delete.mock.calls[0][0]).toBe(`/api/v1/todos/2`);
-    expect(await screen.findAllByRole("listitem")).toHaveLength(1);
+    expect(
+      await screen.findAllByRole("listitem", { hidden: true })
+    ).toHaveLength(1);
   });
 });

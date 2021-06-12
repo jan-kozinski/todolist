@@ -21,8 +21,12 @@ describe("Todos", () => {
   it("Should render with proper styling", async () => {
     render(<Todos todos={todos} />);
 
-    expect(await screen.findAllByRole("listitem")).toHaveLength(2);
-    expect(await screen.findAllByRole("button")).toHaveLength(2);
+    expect(
+      await screen.findAllByRole("listitem", { hidden: true })
+    ).toHaveLength(2);
+    expect(await screen.findAllByRole("button", { hidden: true })).toHaveLength(
+      2
+    );
     screen
       .queryAllByRole("listitem")
       .forEach((item) => expect(item).toHaveClass("item"));
