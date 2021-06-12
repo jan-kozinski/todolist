@@ -1,7 +1,5 @@
-import DeleteTodoBtn from "./DeleteTodoBtn";
 import AnimateHeight from "react-animate-height";
 import { useState, useEffect } from "react";
-import EditTodoBtn from "./EditTodoBtn";
 import Todo from "./Todo";
 
 function Todos({ todos, deleteTodo }) {
@@ -11,10 +9,11 @@ function Todos({ todos, deleteTodo }) {
     setOffsetHeight(document.querySelector("#todosList").offsetHeight);
   }, [setOffsetHeight, todos, todosWithOpenModals]);
   return (
-    <AnimateHeight duration={700} height={offsetHeight}>
-      <ul id="todosList" className="pb-2">
+    <AnimateHeight duration={500} height={offsetHeight}>
+      <ul id="todosList" className="pb-16">
         {todos.map((todo) => (
           <Todo
+            key={todo.id}
             todo={todo}
             deleteTodo={deleteTodo}
             toggleHeightAnimation={() => {

@@ -27,7 +27,7 @@ describe("AddTodo", () => {
   afterEach(cleanup);
   it("Should render with proper styling", async () => {
     expect(screen.getByRole("form", { hidden: true })).toBeInTheDocument();
-    expect(screen.getByRole("form", { hidden: true })).toHaveClass("item");
+    expect(screen.getByRole("form", { hidden: true })).toHaveClass("item py-4");
     expect(screen.getByLabelText("Description:")).toHaveClass(
       "rounded resize-none block w-full p-2"
     );

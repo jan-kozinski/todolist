@@ -35,7 +35,7 @@ function AddTodo({ displayTodo }) {
         </div>
         <form
           role="form"
-          className="item flex flex-col"
+          className="item flex flex-col py-4"
           style={{
             borderTopLeftRadius: "0px",
             borderTopRightRadius: "0px",
