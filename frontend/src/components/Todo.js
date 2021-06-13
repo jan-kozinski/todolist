@@ -53,7 +53,7 @@ function Todo({ todo, deleteTodo, toggleHeightAnimation }) {
               {error && <span>ERROR</span>}
               <button type="submit" onClick={onSaveClick}>
                 save
-              </button>{" "}
+              </button>
               <button type="reset" onClick={onDiscardClick}>
                 discard
               </button>

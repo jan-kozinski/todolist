@@ -48,7 +48,7 @@ function Main() {
     };
   }, []);
   return (
-    <main className="mx-auto my-8 w-6/12">
+    <main className="mx-auto my-8 w-6/12 min-h-screen">
       {isLoaded ? (
         <>
           <AddTodo displayTodo={addTodoToState} />
