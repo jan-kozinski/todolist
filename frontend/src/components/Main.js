@@ -14,6 +14,7 @@ function Main() {
   const removeTodoFromState = (id) => {
     // Start the fading out animation for the item that is to be removed
     document.querySelector(`#item-${id}`).classList.add("fadeout", "opacity-0");
+    // copy of state's todos that doesn't include the item about to be deleted
     const updatedTodosArray = todos.filter((todo) => todo.id !== id);
     // Wait for removed item to fade out
     setTimeout(() => {
@@ -21,16 +22,17 @@ function Main() {
     }, 600);
   };
   useEffect(() => {
+    // race condition prevention
     let isStopped = false;
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
-
     if (!isStopped) {
+      //Call the API only if the component is mounted and is not going to unmount
       const getTodos = async () => {
         try {
           const fetchedTodos = (
             await axios.get("/api/v1/todos", { cancelToken: source.token })
-          ).data.payload;
+          ).data.payload; //@array [ Object({id: String, description: String, completed: Boolean}) ]
           if (!isStopped && fetchedTodos) {
             setTodos(fetchedTodos);
             setIsLoaded(true);
@@ -39,6 +41,7 @@ function Main() {
           if (!isStopped) setError(error);
         }
       };
+
       getTodos();
     }
 

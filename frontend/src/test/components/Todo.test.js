@@ -3,11 +3,7 @@ import userEvent from "@testing-library/user-event";
 import Todo from "../../components/Todo";
 import axios from "axios";
 describe("Todo", () => {
-  let toggleHeightAnimation;
   beforeEach(() => {
-    toggleHeightAnimation = jest.fn(() => {
-      return;
-    });
     axios.patch = jest.fn((url, body) => {
       const { description } = body;
       if (!description)
@@ -38,9 +34,7 @@ describe("Todo", () => {
     });
   }
   it("Should render", () => {
-    render(
-      <Todo todo={todos[0]} toggleHeightAnimation={toggleHeightAnimation} />
-    );
+    render(<Todo todo={todos[0]} />);
     expect(screen.getByRole("listitem")).toBeInTheDocument();
     expect(screen.getByRole("listitem")).toHaveClass(
       "item flex justify-between"
@@ -48,18 +42,14 @@ describe("Todo", () => {
     expect(
       screen.queryByRole("form", { hidden: true })
     ).not.toBeInTheDocument();
-    expect(screen.getAllByRole("button", { hidden: true })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { hidden: true })).toHaveLength(3);
   });
 
   it("should render form after clicking Edit", () => {
-    render(
-      <Todo todo={todos[0]} toggleHeightAnimation={toggleHeightAnimation} />
-    );
-    expect(toggleHeightAnimation).toBeCalledTimes(0);
+    render(<Todo todo={todos[0]} />);
     act(() => {
-      userEvent.click(screen.getAllByRole("button", { hidden: true })[0]);
+      userEvent.click(screen.getAllByRole("button", { hidden: true })[1]);
     });
-    expect(toggleHeightAnimation).toBeCalledTimes(1);
     expect(screen.getByRole("form", { hidden: true })).toBeInTheDocument();
     expect(
       screen.getByLabelText("Description:", { hidden: true })
@@ -71,16 +61,11 @@ describe("Todo", () => {
 
   it("If the description was empty it should display error and not call api patch", async () => {
     for (let i = 1; i <= 5; i++) {
-      render(
-        <Todo
-          todo={todos[i - 1]}
-          toggleHeightAnimation={toggleHeightAnimation}
-        />
-      );
+      render(<Todo todo={todos[i - 1]} />);
       expect(
         screen.getByText(`Do activity number ${i}`, { hidden: true })
       ).toBeInTheDocument();
-      let editBtn = screen.getAllByRole("button", { hidden: true })[0];
+      let editBtn = screen.getAllByRole("button", { hidden: true })[1];
       act(() => {
         userEvent.click(editBtn);
       });
@@ -93,10 +78,10 @@ describe("Todo", () => {
       });
       expect(textArea).toHaveValue("");
       await act(async () => {
-        userEvent.click(screen.getByText("save"));
+        userEvent.click(screen.getByText("Save"));
       });
       expect(
-        await screen.findByText("ERROR", { hidden: true })
+        await screen.findByText("Description can't be empty!", { hidden: true })
       ).toBeInTheDocument();
       expect(axios.patch).toBeCalledTimes(0);
 
@@ -108,16 +93,11 @@ describe("Todo", () => {
   });
   it("Given the same, unchanged description should not call api patch and just hide the form", async () => {
     for (let i = 1; i <= 5; i++) {
-      render(
-        <Todo
-          todo={todos[i - 1]}
-          toggleHeightAnimation={toggleHeightAnimation}
-        />
-      );
+      render(<Todo todo={todos[i - 1]} />);
       expect(
         screen.getByText(`Do activity number ${i}`, { hidden: true })
       ).toBeInTheDocument();
-      let editBtn = screen.getAllByRole("button", { hidden: true })[0];
+      let editBtn = screen.getAllByRole("button", { hidden: true })[1];
       act(() => {
         userEvent.click(editBtn);
       });
@@ -126,7 +106,7 @@ describe("Todo", () => {
       expect(textArea).toHaveValue(`Do activity number ${i}`);
 
       await act(async () => {
-        userEvent.click(screen.getByText("save"));
+        userEvent.click(screen.getByText("Save"));
       });
       expect(
         await screen.queryByRole("form", { hidden: true })
@@ -141,16 +121,11 @@ describe("Todo", () => {
   });
   it("Given a valid description should call api patch and hide the form", async () => {
     for (let i = 1; i <= 5; i++) {
-      render(
-        <Todo
-          todo={todos[i - 1]}
-          toggleHeightAnimation={toggleHeightAnimation}
-        />
-      );
+      render(<Todo todo={todos[i - 1]} />);
       expect(
         screen.getByText(`Do activity number ${i}`, { hidden: true })
       ).toBeInTheDocument();
-      let editBtn = screen.getAllByRole("button", { hidden: true })[0];
+      let editBtn = screen.getAllByRole("button", { hidden: true })[1];
       act(() => {
         userEvent.click(editBtn);
       });
@@ -170,7 +145,7 @@ describe("Todo", () => {
       expect(textArea).toHaveValue(`Do something else instead-${i}`);
 
       await act(async () => {
-        userEvent.click(screen.getByText("save"));
+        userEvent.click(screen.getByText("Save"));
       });
       expect(axios.patch).toBeCalledTimes(i);
       expect(axios.patch.mock.calls[i - 1][0]).toBe(
@@ -197,11 +172,9 @@ describe("Todo", () => {
   });
 
   it("Should hide the form on discard button click", () => {
-    render(
-      <Todo todo={todos[0]} toggleHeightAnimation={toggleHeightAnimation} />
-    );
+    render(<Todo todo={todos[0]} />);
 
-    let editBtn = screen.getAllByRole("button", { hidden: true })[0];
+    let editBtn = screen.getAllByRole("button", { hidden: true })[1];
     act(() => {
       userEvent.click(editBtn);
     });
@@ -209,11 +182,45 @@ describe("Todo", () => {
     expect(screen.getByRole("form", { hidden: true })).toBeInTheDocument();
 
     act(() => {
-      let discardBtn = screen.getByText("discard");
+      let discardBtn = screen.getByText("X Discard");
       userEvent.click(discardBtn);
     });
     expect(
       screen.queryByRole("form", { hidden: true })
     ).not.toBeInTheDocument();
+  });
+  it("Should handle error", async () => {
+    axios.patch = jest.fn((url, body) => {
+      return Promise.resolve({
+        data: {
+          success: false,
+          message: "Something went wrong",
+        },
+      });
+    });
+
+    render(<Todo todo={todos[1]} />);
+
+    let editBtn = screen.getAllByRole("button", { hidden: true })[1];
+    act(() => {
+      userEvent.click(editBtn);
+    });
+
+    let textArea = screen.getByLabelText("Description:");
+    act(() => {
+      userEvent.clear(textArea);
+    });
+
+    await act(async () => {
+      await userEvent.type(textArea, `Do something else instead-3`, {
+        delay: 1,
+      });
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText("Save"));
+    });
+
+    expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
   });
 });

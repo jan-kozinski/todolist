@@ -5,14 +5,17 @@ import AnimateHeight from "react-animate-height";
 function AddTodo({ displayTodo }) {
   const [error, setError] = useState(null);
   const [description, setDescription] = useState("");
+  //offsetHeight used for the smooth height change animation
   const [offsetHeight, setOffsetHeight] = useState("auto");
 
   useEffect(() => {
+    //Set height on mount and whenever the error message should be displayed/cleared
     setOffsetHeight(document.querySelector("#addTodoContainer").offsetHeight);
   }, [setOffsetHeight, error]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    //clear error
     setError(null);
     try {
       if (!description) return setError("Description can't be empty!");
@@ -21,9 +24,11 @@ function AddTodo({ displayTodo }) {
       if (!result.data.success) {
         return setError(result.data.message);
       }
-      displayTodo(result.data.payload);
+      displayTodo(result.data.payload); //@Object: {id: String, description: String, completed: Boolean}
     } catch (error) {
-      setError(error.response.data.message);
+      if (error.response && error.response.data)
+        setError(error.response.data.message);
+      else setError("Something went wrong!");
     }
   };
 
@@ -33,6 +38,7 @@ function AddTodo({ displayTodo }) {
         <div id="addTodoHeader">
           <h2 className="m-auto w-max text-2xl">Add Todo</h2>
         </div>
+
         <form
           role="form"
           className="item flex flex-col p-4"
@@ -50,13 +56,14 @@ function AddTodo({ displayTodo }) {
             }}
             value={description}
             className="rounded focus:outline-none resize-none block w-full p-2 text-sm h-24"
-          ></textarea>
+          />
+
           <button
             type="submit"
             className="bg-purple-700 hover:bg-purple-600 button"
-          >
-            +
-          </button>
+            children="+"
+          />
+
           {error && (
             <span className="border-red-500 border-2 m-4 p-4 rounded-md bg-red-100">
               {error}

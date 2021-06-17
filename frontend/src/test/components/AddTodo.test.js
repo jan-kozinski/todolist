@@ -68,6 +68,70 @@ describe("AddTodo", () => {
     expect(
       await screen.findByText("Description can't be empty!")
     ).toBeInTheDocument();
-    //---TO-DO----
+  });
+  it("Should handle errors properly", async () => {
+    axios.post = jest.fn((url, body) => {
+      return Promise.reject("Just because");
+    });
+    let textArea = screen.getByLabelText("Description:");
+
+    expect(textArea).toHaveValue("");
+    await act(async () => {
+      await userEvent.type(textArea, "Hello, World!", { delay: 1 });
+    });
+    expect(textArea).toHaveValue("Hello, World!");
+    act(() => {
+      userEvent.click(screen.getByText("+"));
+    });
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    expect(
+      await screen.findByText("Something went wrong!")
+    ).toBeInTheDocument();
+    //---------------------------------------------------------------
+    act(() => {
+      userEvent.clear(textArea);
+    });
+
+    axios.post = jest.fn((url, body) => {
+      return Promise.reject({
+        response: {
+          data: { success: false, message: "Too busy, sorry!" },
+        },
+      });
+    });
+
+    expect(textArea).toHaveValue("");
+    await act(async () => {
+      await userEvent.type(textArea, "Hello, World!", { delay: 1 });
+    });
+    expect(textArea).toHaveValue("Hello, World!");
+    act(() => {
+      userEvent.click(screen.getByText("+"));
+    });
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText("Too busy, sorry!")).toBeInTheDocument();
+    //---------------------------------------------------------------
+    act(() => {
+      userEvent.clear(textArea);
+    });
+
+    axios.post = jest.fn((url, body) => {
+      return Promise.resolve({
+        data: { success: false, message: "Not gonna help you, pal!" },
+      });
+    });
+
+    expect(textArea).toHaveValue("");
+    await act(async () => {
+      await userEvent.type(textArea, "Hello, World!", { delay: 1 });
+    });
+    expect(textArea).toHaveValue("Hello, World!");
+    act(() => {
+      userEvent.click(screen.getByText("+"));
+    });
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    expect(
+      await screen.findByText("Not gonna help you, pal!")
+    ).toBeInTheDocument();
   });
 });

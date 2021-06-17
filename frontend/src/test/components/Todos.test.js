@@ -23,14 +23,11 @@ describe("Todos", () => {
     expect(
       await screen.findByRole("list", { hidden: true })
     ).toBeInTheDocument();
-    expect(await screen.findByRole("list", { hidden: true })).toHaveClass(
-      "pb-16"
-    );
     expect(
       await screen.findAllByRole("listitem", { hidden: true })
     ).toHaveLength(2);
     expect(await screen.findAllByRole("button", { hidden: true })).toHaveLength(
-      4
+      6
     );
     screen
       .queryAllByRole("listitem")

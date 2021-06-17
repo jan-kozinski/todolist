@@ -14,4 +14,8 @@ describe("App", () => {
     render(<App />);
     expect(screen.getByRole("main")).toBeInTheDocument();
   });
+  it("Should render a footer", () => {
+    render(<App />);
+    expect(screen.getByTestId("footer")).toBeInTheDocument();
+  });
 });

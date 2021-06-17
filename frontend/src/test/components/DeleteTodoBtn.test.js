@@ -32,4 +32,15 @@ describe("DeleteTodoBtn", () => {
       cleanup();
     }
   });
+  it("Should call API only once after excessive clicking", () => {
+    render(<DeleteTodoBtn id={1} />);
+    let deleteBtn = screen.getByRole("button");
+    act(() => {
+      for (let i = 0; i < 5; i++) {
+        userEvent.dblClick(deleteBtn);
+      }
+    });
+    expect(axios.delete).toBeCalledTimes(1);
+    expect(axios.delete.mock.calls[0][0]).toBe(`/api/v1/todos/${1}`);
+  });
 });
