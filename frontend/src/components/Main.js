@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import AddTodo from "./AddTodo";
 import Todos from "./Todos";
 
@@ -14,7 +14,7 @@ function Main() {
   const removeTodoFromState = (id) => {
     // Start the fading out animation for the item that is to be removed
     document.querySelector(`#item-${id}`).classList.add("fadeout", "opacity-0");
-    // copy of state's todos that doesn't include the item about to be deleted
+    // copy of state's todos that doesn't include the item that is about to be deleted
     const updatedTodosArray = todos.filter((todo) => todo.id !== id);
     // Wait for removed item to fade out
     setTimeout(() => {

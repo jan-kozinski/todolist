@@ -11,7 +11,7 @@ function Todo({ todo, deleteTodo }) {
   const [description, setDescription] = useState(todo.description);
 
   useEffect(() => {
-    //Set height on mount and whenever the error message should be displayed/cleared or the isBeingChange status changes
+    //Set height on mount and whenever the error message should be displayed/cleared or the isBeingEdited status changes
     setOffsetHeight(
       document.querySelector(`#item-${todo.id}-content`).offsetHeight
     );

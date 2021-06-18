@@ -10,7 +10,7 @@ function TodoDescription({ description, todo, setIsBeingEdited, deleteTodo }) {
 
       <div className="flex justify-end">
         <ToggleCompleted
-          className="mr-auto mt-auto rounded-md bg-purple-700 p-2 text-purple-50"
+          className="mr-auto mt-auto rounded-md bg-purple-700 hover:bg-purple-600 p-2 text-purple-50"
           todo={todo}
         />
 

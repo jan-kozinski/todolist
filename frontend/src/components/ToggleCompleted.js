@@ -8,7 +8,8 @@ function ToggleCompleted({ todo, className }) {
   //used to prevent user from excessive API calls
   const isProccessingRequest = useRef(false);
   const [error, setError] = useState(null);
-  const handleClick = async () => {
+  const handleClick = async (e) => {
+    e.preventDefault();
     try {
       let result;
       if (isProccessingRequest.current) return;
@@ -27,19 +28,15 @@ function ToggleCompleted({ todo, className }) {
     }
   };
   return (
-    <div className={className}>
-      <button
-        className="mr-2 focus:outline-none"
-        onClick={handleClick}
-        children={"Completed: "}
-      />
+    <button onClick={handleClick} className={className + " focus:outline-none"}>
+      <span className="mr-2">Completed: </span>
       {isCompleted ? (
         <FontAwesomeIcon data-testid="fa-checked" icon={faCheck} />
       ) : (
         <span className="font-bold px-1">X</span>
       )}
       {error && <span>{error}</span>}
-    </div>
+    </button>
   );
 }
 
