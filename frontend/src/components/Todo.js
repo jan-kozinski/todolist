@@ -15,7 +15,7 @@ function Todo({ todo, deleteTodo }) {
     setOffsetHeight(
       document.querySelector(`#item-${todo.id}-content`).offsetHeight
     );
-  }, [setOffsetHeight, todo.id, isBeingEdited, error]);
+  }, [todo.id, isBeingEdited, error]);
 
   return (
     <li id={`item-${todo.id}`} className="item flex justify-between">

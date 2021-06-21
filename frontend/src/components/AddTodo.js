@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import AnimateHeight from "react-animate-height";
 
-function AddTodo({ displayTodo }) {
+const AddTodo = React.memo(({ displayTodo }) => {
   const [error, setError] = useState(null);
   const [description, setDescription] = useState("");
   //offsetHeight used for the smooth height change animation
@@ -11,7 +11,7 @@ function AddTodo({ displayTodo }) {
   useEffect(() => {
     //Set height on mount and whenever the error message should be displayed/cleared
     setOffsetHeight(document.querySelector("#addTodoContainer").offsetHeight);
-  }, [setOffsetHeight, error]);
+  }, [error]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -73,6 +73,6 @@ function AddTodo({ displayTodo }) {
       </section>
     </AnimateHeight>
   );
-}
+});
 
 export default AddTodo;
