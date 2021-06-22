@@ -30,7 +30,9 @@ describe("Main", () => {
     act(() => {
       render(<Main />);
     });
-    expect(screen.getByRole("main")).toHaveClass("mx-auto my-8 w-6/12");
+    expect(screen.getByRole("main")).toHaveClass(
+      "mx-auto lg:w-6/12 my-8 md:w-8/12 sm:w-10/12 w-auto min-h-screen"
+    );
     await waitForElementToBeRemoved(() => screen.getByText("Loading todos..."));
   });
   it("Should display error message when can not communicate with the server", async () => {

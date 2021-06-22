@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AddTodo from "./AddTodo";
 import Todos from "./Todos";
 
@@ -8,19 +8,27 @@ function Main() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
 
-  const addTodoToState = (todo) => {
-    setTodos([todo, ...todos]);
-  };
-  const removeTodoFromState = (id) => {
-    // Start the fading out animation for the item that is to be removed
-    document.querySelector(`#item-${id}`).classList.add("fadeout", "opacity-0");
-    // copy of state's todos that doesn't include the item that is about to be deleted
-    const updatedTodosArray = todos.filter((todo) => todo.id !== id);
-    // Wait for removed item to fade out
-    setTimeout(() => {
-      setTodos(updatedTodosArray);
-    }, 600);
-  };
+  const addTodoToState = useCallback(
+    (todo) => {
+      setTodos([todo, ...todos]);
+    },
+    [todos]
+  );
+  const removeTodoFromState = useCallback(
+    (id) => {
+      // Start the fading out animation for the item that is to be removed
+      document
+        .querySelector(`#item-${id}`)
+        .classList.add("fadeout", "opacity-0");
+      // copy of state's todos that doesn't include the item that is about to be deleted
+      const updatedTodosArray = todos.filter((todo) => todo.id !== id);
+      // Wait for removed item to fade out
+      setTimeout(() => {
+        setTodos(updatedTodosArray);
+      }, 600);
+    },
+    [todos]
+  );
   useEffect(() => {
     // race condition prevention
     let isStopped = false;
@@ -51,7 +59,7 @@ function Main() {
     };
   }, []);
   return (
-    <main className="mx-auto my-8 w-6/12 min-h-screen">
+    <main className="mx-auto lg:w-6/12 my-8 md:w-8/12 sm:w-10/12 w-auto min-h-screen">
       {isLoaded ? (
         <>
           <AddTodo displayTodo={addTodoToState} />
